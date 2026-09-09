@@ -7,11 +7,16 @@ import (
 	"time"
 
 	"github.com/Mohammad-Mansoor/go-api/internal/config"
+	"github.com/Mohammad-Mansoor/go-api/internal/db"
 	"github.com/Mohammad-Mansoor/go-api/internal/handlers"
 )
 
 func main() {
-	config.MustLoad()
+	ctx := config.MustLoad()
+	_, err := db.ConnectDB(ctx.DB_URL)
+	if err != nil {
+		log.Fatalf("main.db.connect: %v", err)
+	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", handlers.Healthz)
